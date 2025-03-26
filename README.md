@@ -22,7 +22,11 @@ O objetivo do projeto é criar uma API simples para gerenciar um acervo de livro
 
 📌 Listar todos os livros
 
-Tudo isso integrado a um banco de dados, praticando a manipulação de dados e o uso de rotas HTTP (GET, e POST).
+📌 Atualizar livros
+
+📌 Deletar livros
+
+Tudo isso integrado a um banco de dados, praticando a manipulação de dados e o uso de rotas HTTP (GET, POST, PUT e DELETE).
 
 # 🗃 Banco de Dados
 O projeto permite o uso de dois tipos de banco de dados:
@@ -33,6 +37,17 @@ O projeto permite o uso de dois tipos de banco de dados:
 
 # 🧪 Testes com Postman
 As rotas da API foram testadas utilizando o Postman, proporcionando o aprendizado na criação de requisições HTTP e interpretação de respostas da API.
+
+# Rotas Disponíveis
+GET / — Exibe uma mensagem simples de boas-vindas.
+
+GET /livros — Lista todos os livros cadastrados no banco de dados.
+
+POST /doar — Adiciona um novo livro no banco de dados.
+
+PUT /livros/{id} — Atualiza as informações de um livro específico.
+
+DELETE /livros/{id} — Deleta um livro específico.
 
 # 🔧 Como Executar o Projeto
 Clone o repositório:
