@@ -1,7 +1,9 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 import sqlite3
 
 app = Flask(__name__)
+CORS(app)
 
 
 @app.route("/", methods=["GET"])
@@ -32,9 +34,7 @@ init_db()
 def doar():
 
     dados = request.get_json()
-
-    if not dados:
-        return jsonify({"erro": "Nenhum dado enviado"}), 400
+    print(f" AQUI ESTÃO OS DADOS RETORNADOS DO CLIENTE {dados}")
 
     titulo = dados.get("titulo")
     categoria = dados.get("categoria")
@@ -49,8 +49,7 @@ def doar():
         conn.execute(f"""
             INSERT INTO LIVROS (titulo, categoria, autor, imagem_url)
             VALUES ("{titulo}", "{categoria}", "{autor}", "{imagem_url}")
-            """
-                     )
+            """)
 
         conn.commit()
 
