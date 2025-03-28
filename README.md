@@ -11,7 +11,7 @@
 
   - Postman
 
-  - Flask (se estiver usando algum framework, adicione aqui)
+  - Flask 
 
   - JSON
 
