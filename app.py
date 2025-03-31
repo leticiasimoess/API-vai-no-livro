@@ -89,9 +89,9 @@ def atualizar_livro(id):
     titulo = dados.get("titulo")
     categoria = dados.get("categoria")
     autor = dados.get("autor")
-    imagem_url = dados.get("imagem_url")
+    image_url = dados.get("image_url")
 
-    if not titulo or not categoria or not autor or not imagem_url:
+    if not titulo or not categoria or not autor or not image_url:
         return jsonify({"erro": "Todos os campos são obrigatórios"}), 400
 
     with sqlite3.connect("database.db") as conn:
