@@ -20,7 +20,7 @@ def init_db():
                 titulo TEXT NOT NULL,
                 categoria TEXT NOT NULL,
                 autor TEXT NOT NULL,
-                image_url TEXT NOT NULL
+                imagem_url TEXT NOT NULL
             )
             """
         )
@@ -34,21 +34,24 @@ init_db()
 def doar():
 
     dados = request.get_json()
-    print(f" AQUI ESTÃO OS DADOS RETORNADOS DO CLIENTE {dados}")
+    print(f"📩 Dados recebidos: {dados}")
+
+    if not dados:
+        return jsonify({"erro": "Nenhum dado foi enviado"}), 400
 
     titulo = dados.get("titulo")
     categoria = dados.get("categoria")
     autor = dados.get("autor")
-    image_url = dados.get("image_url")
+    imagem_url = dados.get("imagem_url")
 
-    if not titulo or not categoria or not autor or not image_url:
+    if not titulo or not categoria or not autor or not imagem_url:
         return jsonify({"erro": "Todos os campos são obrigatórios"}), 400
 
     with sqlite3.connect("database.db") as conn:
 
         conn.execute(f"""
-            INSERT INTO LIVROS (titulo, categoria, autor, image_url)
-            VALUES ("{titulo}", "{categoria}", "{autor}", "{image_url}")
+            INSERT INTO LIVROS (titulo, categoria, autor, imagem_url)
+            VALUES ("{titulo}", "{categoria}", "{autor}", "{imagem_url}")
             """)
 
         conn.commit()
@@ -70,7 +73,7 @@ def listar_livros():
                 "titulo": item[1],
                 "categoria": item[2],
                 "autor": item[3],
-                "image_url": item[4]
+                "imagem_url": item[4]
             }
             livros_formatados.append(dicionario_livros)
     
@@ -78,31 +81,39 @@ def listar_livros():
     return jsonify(livros_formatados)
 
 
-#o PUT vai mudar algo
+#o PUT vai mudar algo aqui é onde o servidor diz pra gente quando alguém enviar um pedido do tipo PUT PARA A url
+#livros/<id>, a função atualizar_livro(id) vai ser executada. O <int:id> é uma parte da URL onde o número id será colocado.
+#  Isso é importante para saber qual livro a gente quer atualizar.
 @app.route("/livros/<int:id>", methods=["PUT"])
-def atualizar_livro(id):
-    dados = request.get_json()
+def atualizar_livro(id): #a função recebe o id
+    dados = request.get_json() # O PROGRAMA VAI PEGAR OS DADOS QUE FORAM ENVIADO PELO USUARIO NO FORMATO JSON
 
-    if not dados:
-        return jsonify({"erro": "Nenhum dado enviado"}), 400
-
+    if not dados: #Se os dados não foram enviados ou estão vazios
+        return jsonify({"erro": "Nenhum dado enviado"}), 400 # vai retornar nenhum dadod enviado Se os dados não existam
+    
+    #aqui vai ser onde vamos pegar os dados
     titulo = dados.get("titulo")
     categoria = dados.get("categoria")
     autor = dados.get("autor")
-    image_url = dados.get("image_url")
+    imagem_url = dados.get("imagem_url")
 
-    if not titulo or not categoria or not autor or not image_url:
-        return jsonify({"erro": "Todos os campos são obrigatórios"}), 400
+    #se algum dos dados nao for enviado vai ser retornado um erro
+    if not titulo or not categoria or not autor or not imagem_url:
+        return jsonify({"erro": "Todos os campos são obrigatórios"}), 400 # aqui erro vai ser retornado caso falte algum 
 
+#connecta com o banco de dados
     with sqlite3.connect("database.db") as conn:
         resultado = conn.execute
         (f""" 
         UPDATE LIVROS
-         SET titulo = "{titulo}", categoria = "{categoria}", autor = "{autor}", image_url = "{image_url}" WHERE id = {id}
+         SET titulo = "{titulo}", categoria = "{categoria}", autor = "{autor}", imagem_url = "{imagem_url}" WHERE id = {id}
         """)
 
+        #o conn commit vai salvar a mudança no banco de dados.
         conn.commit()
         return jsonify({"mensagem": "Livro atualizado com sucesso!"}), 200
+#se tudo deu certo vai retornar a mensagem
+
 
 # o DELETE vai apagar algo
 @app.route("/livros/<int:id>", methods=["DELETE"])
@@ -115,6 +126,7 @@ def deletar_livro(id):
             return jsonify({"erro": "Livro não encontrado"}), 404
 
     return jsonify({"mensagem": "Livro deletado com sucesso!"}), 200
+
 
 
 if __name__ == "__main__":
